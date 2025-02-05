@@ -27,7 +27,7 @@
             margin: 20px auto;
             padding: 20px;
             width: 300px;
-            background-color: #d3d3d3; /* Fundalul casetelor setat la #d3d3d3 */
+            background-color: rgba(255, 255, 255, 0.7); /* Fundal transparent cu opacitate */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             height: 250px; /* Dimensiune fixă pentru casete */
@@ -41,6 +41,7 @@
             border-bottom: 1px solid #444;
             color: #000; /* Textul cărților în negru pentru a fi vizibil pe fundalul deschis */
             transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 20px; /* Font mic */
         }
         .book:last-child, .extractedBook:last-child {
             border-bottom: none;
@@ -77,6 +78,20 @@
             right: 10px;
             width: 420px; /* Modificat */
             height: 639px; /* Modificat */
+             margin-right: 20cm;
+        }
+        #extractedBooks {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 320px; /* Lățime fixă pentru caseta de cărți extrase */
+            height: 300px; /* Dimensiune fixă pentru caseta de cărți extrase */
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Două coloane pentru cărțile extrase */
+            grid-gap: 10px;
+            padding: 10px;
+            font-size: 20px; /* Font mic pentru lista de cărți */
+            color: #000;
         }
     </style>
 </head>
