@@ -50,7 +50,7 @@
             background-color: rgba(255, 235, 59, 0.2);
             transform: scale(1.05);
         }
-        /*#drawButton, #resetButton {
+        #drawButton, #resetButton {
             font-family: 'Raleway', sans-serif;
             font-weight: 700;
             padding: 15px 30px;
@@ -66,7 +66,7 @@
         #drawButton:hover, #resetButton:hover {
             background-color: #001f5b;
             transform: scale(1.1);
-        }*/
+        }
         #selectedBook {
             margin-top: 20px;
             font-size: 1.5rem;
@@ -98,6 +98,7 @@
             font-size: 18px;
             margin-bottom: 10px;
             color: #000;
+            font-weight: normal;
         }
         #extractedList {
             list-style: none;
@@ -118,7 +119,7 @@
     <img src="https://michelinmedia.com/site/user/images/170517_Bibendum_Bienvenue_vectorisation_02__2_.png" alt="Michelin Logo" class="logo">
     <h2>Trage la sorți o carte pentru donație</h2>
     <button id="drawButton">Extrage o carte</button>
-    <button id="resetButton">Resetează cărțile extrase</button>
+    <button id="resetButton" disabled >Resetează cărțile extrase</button>
     <p id="selectedBook"></p>
     <ul id="bookList"></ul>
 
