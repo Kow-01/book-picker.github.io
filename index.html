@@ -13,7 +13,7 @@
             margin: 0;
             background: url('https://michelinmedia.com/site/user/images/bg_media.jpg') no-repeat center center;
             background-size: cover;
-            color: #fff;
+            color: #fff; /* Font alb pentru întregul document */
         }
         h2 {
             font-family: 'Raleway', sans-serif;
@@ -21,27 +21,27 @@
             color: #ffcc00;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
-        #bookList {
+        #bookList, #extractedBooks {
             margin: 20px auto;
             padding: 20px;
             width: 300px;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: #d3d3d3; /* Fundalul casetelor setat la #d3d3d3 */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        .book {
+        .book, .extractedBook {
             font-family: 'Raleway', sans-serif;
             font-weight: 400;
             padding: 10px;
             cursor: pointer;
             border-bottom: 1px solid #444;
-            color: #ffcc00;
+            color: #000; /* Textul cărților în negru pentru a fi vizibil pe fundalul deschis */
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
-        .book:last-child {
+        .book:last-child, .extractedBook:last-child {
             border-bottom: none;
         }
-        .book:hover {
+        .book:hover, .extractedBook:hover {
             background-color: rgba(255, 235, 59, 0.2);
             transform: scale(1.05);
         }
@@ -73,19 +73,6 @@
             right: 10px;
             width: 420px; /* Modificat */
             height: 639px; /* Modificat */
-        }
-        #extractedBooks {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        .extractedBook {
-            color: #ffcc00;
-            padding: 10px;
-            border-bottom: 1px solid #444;
         }
     </style>
 </head>
