@@ -16,7 +16,13 @@
         // Funcție pentru a obține lista salvată sau cea inițială
         function getSavedBooks() {
             let savedBooks = localStorage.getItem("books");
-            return savedBooks ? JSON.parse(savedBooks) : initialBooks;
+            try {
+                return savedBooks ? JSON.parse(savedBooks) : [...initialBooks];
+            } catch (error) {
+                console.error("Eroare la citirea Local Storage:", error);
+                localStorage.removeItem("books"); // Resetăm dacă JSON-ul e corupt
+                return [...initialBooks];
+            }
         }
 
         // Funcție pentru a salva lista în Local Storage
@@ -24,10 +30,16 @@
             localStorage.setItem("books", JSON.stringify(books));
         }
 
-        // Reîncarcă lista de cărți la deschiderea paginii
+        // Funcție pentru a afișa cărțile în HTML
         function loadBooks() {
             let books = getSavedBooks();
             bookList.innerHTML = ""; // Curățăm lista HTML
+
+            if (books.length === 0) {
+                bookList.innerHTML = "<li style='color: red;'>Toate cărțile au fost extrase!</li>";
+                return;
+            }
+
             books.forEach(book => {
                 let li = document.createElement("li");
                 li.classList.add("book");
