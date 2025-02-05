@@ -13,7 +13,7 @@
             margin: 0;
             background: url('https://michelinmedia.com/site/user/images/bg_media.jpg') no-repeat center center;
             background-size: cover;
-            color: #fff; /* Font alb pentru întregul document */
+            color: #fff;
             height: 100vh; /* Întregul viewport */
             overflow: hidden; /* Ascunde bara de scroll la nivelul paginii */
         }
@@ -50,7 +50,7 @@
             background-color: rgba(255, 235, 59, 0.2);
             transform: scale(1.05);
         }
-        #drawButton {
+        #drawButton, #resetButton {
             font-family: 'Raleway', sans-serif;
             font-weight: 700;
             padding: 15px 30px;
@@ -61,8 +61,9 @@
             border: none;
             border-radius: 25px;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 10px;
         }
-        #drawButton:hover {
+        #drawButton:hover, #resetButton:hover {
             background-color: #001f5b;
             transform: scale(1.1);
         }
@@ -76,26 +77,26 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 420px; /* Modificat */
-            height: 639px; /* Modificat */
+            width: 420px;
+            height: 639px;
         }
         #extractedBooks {
             position: fixed;
             bottom: 20px;
             left: 20px;
-            width: 320px; /* Lățime fixă pentru caseta de cărți extrase */
-            height: 300px; /* Dimensiune fixă pentru caseta de cărți extrase */
+            width: 320px;
+            height: 300px;
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Două coloane pentru cărțile extrase */
+            grid-template-columns: 1fr 1fr;
             grid-gap: 10px;
             padding: 10px;
-            font-size: 16px; /* Font mic pentru lista de cărți extrase */
+            font-size: 10px;
             color: #000;
         }
         #extractedBooks h3 {
-            font-size: 24px; /* Font mai mare pentru titlu */
+            font-size: 24px;
             margin-bottom: 10px;
-            color: #ffcc00; /* Culoare galbenă pentru titlu */
+            color: #fff;
         }
     </style>
 </head>
@@ -103,6 +104,7 @@
     <img src="https://michelinmedia.com/site/user/images/170517_Bibendum_Bienvenue_vectorisation_02__2_.png" alt="Michelin Logo" class="logo">
     <h2>Trage la sorți o carte pentru donație</h2>
     <button id="drawButton">Extrage o carte</button>
+    <button id="resetButton">Resetează cărțile extrase</button>
     <p id="selectedBook"></p>
     <ul id="bookList"></ul>
 
@@ -174,6 +176,15 @@
 
             // Reîncarcă lista de cărți rămase și extrase
             loadBooks();
+        });
+
+        // Event listener pentru butonul de resetare
+        document.getElementById("resetButton").addEventListener("click", function() {
+            // Șterge cărțile extrase din localStorage
+            localStorage.removeItem('extractedBooks');
+            localStorage.removeItem('remainingBooks');
+            alert("Lista de cărți extrase a fost resetată!");
+            loadBooks(); // Reîncarcă lista pentru a reflecta resetarea
         });
 
         // Încarcă cărțile atunci când pagina este încărcată
