@@ -74,6 +74,19 @@
             width: 100px;
             height: auto;
         }
+        #extractedBooks {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .extractedBook {
+            color: #ffcc00;
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
     </style>
 </head>
 <body>
@@ -88,8 +101,28 @@
         <li class="book">Aventurile lui Tom Sawyer</li>
         <li class="book">Amintiri din copilărie</li>
     </ul>
+
+    <div id="extractedBooks">
+        <h3>Cărți extrase:</h3>
+        <ul id="extractedList"></ul>
+    </div>
     
     <script>
+        // Încarcă cărțile extrase și le adaugă la lista de cărți extrase
+        function loadExtractedBooks() {
+            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
+            const extractedList = document.getElementById('extractedList');
+            extractedList.innerHTML = ''; // Curăță lista existentă
+
+            extractedBooks.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('extractedBook');
+                listItem.innerText = `${item.title} - Extras pe ${item.date}`;
+                extractedList.appendChild(listItem);
+            });
+        }
+
+        // Event listener pentru butonul de extragere
         document.getElementById("drawButton").addEventListener("click", function() {
             let books = document.querySelectorAll(".book");
             if (books.length === 0) {
@@ -98,9 +131,27 @@
             }
             let randomIndex = Math.floor(Math.random() * books.length);
             let selectedBook = books[randomIndex];
+
+            // Afișează cartea extrasă
             document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook.innerText;
+
+            // Salvează cartea extrasă în localStorage
+            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
+            const currentDate = new Date().toLocaleString();
+            extractedBooks.push({ title: selectedBook.innerText, date: currentDate });
+            localStorage.setItem('extractedBooks', JSON.stringify(extractedBooks));
+
+            // Adaugă cartea extrasă în lista de cărți extrase
+            loadExtractedBooks();
+
+            // Elimină cartea din lista principală
             selectedBook.remove();
         });
+
+        // Încarcă lista de cărți extrase când pagina este încărcată
+        window.onload = function() {
+            loadExtractedBooks();
+        };
     </script>
 </body>
 </html>
