@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrage o Carte</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        #bookList { margin: 20px auto; padding: 10px; width: 300px; border: 1px solid #ddd; }
+        .book { padding: 5px; cursor: pointer; }
+        .book:hover { background-color: #f0f0f0; }
+        #drawButton { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Trage la sorți o carte pentru donație</h2>
+    <button id="drawButton">Extrage o carte</button>
+    <p id="selectedBook"></p>
+    <ul id="bookList">
+        <li class="book">Povești nemuritoare</li>
+        <li class="book">Călătoria lui Gulliver</li>
+        <li class="book">Micul Prinț</li>
+        <li class="book">Aventurile lui Tom Sawyer</li>
+        <li class="book">Amintiri din copilărie</li>
+    </ul>
+    
+    <script>
+        document.getElementById("drawButton").addEventListener("click", function() {
+            let books = document.querySelectorAll(".book");
+            if (books.length === 0) {
+                document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
+                return;
+            }
+            let randomIndex = Math.floor(Math.random() * books.length);
+            let selectedBook = books[randomIndex];
+            document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook.innerText;
+            selectedBook.remove();
+        });
+    </script>
+</body>
+</html>
