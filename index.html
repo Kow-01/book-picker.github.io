@@ -14,6 +14,8 @@
             background: url('https://michelinmedia.com/site/user/images/bg_media.jpg') no-repeat center center;
             background-size: cover;
             color: #fff; /* Font alb pentru întregul document */
+            height: 100vh; /* Întregul viewport */
+            overflow: hidden; /* Ascunde bara de scroll la nivelul paginii */
         }
         h2 {
             font-family: 'Raleway', sans-serif;
@@ -28,6 +30,8 @@
             background-color: #d3d3d3; /* Fundalul casetelor setat la #d3d3d3 */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            height: 250px; /* Dimensiune fixă pentru casete */
+            overflow-y: scroll; /* Permite derularea în casete */
         }
         .book, .extractedBook {
             font-family: 'Raleway', sans-serif;
