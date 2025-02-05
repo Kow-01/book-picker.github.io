@@ -94,13 +94,7 @@
     <h2>Trage la sorți o carte pentru donație</h2>
     <button id="drawButton">Extrage o carte</button>
     <p id="selectedBook"></p>
-    <ul id="bookList">
-        <li class="book">Povești nemuritoare</li>
-        <li class="book">Călătoria lui Gulliver</li>
-        <li class="book">Micul Prinț</li>
-        <li class="book">Aventurile lui Tom Sawyer</li>
-        <li class="book">Amintiri din copilărie</li>
-    </ul>
+    <ul id="bookList"></ul>
 
     <div id="extractedBooks">
         <h3>Cărți extrase:</h3>
@@ -108,12 +102,33 @@
     </div>
     
     <script>
-        // Încarcă cărțile extrase și le adaugă la lista de cărți extrase
-        function loadExtractedBooks() {
-            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
-            const extractedList = document.getElementById('extractedList');
-            extractedList.innerHTML = ''; // Curăță lista existentă
+        const initialBooks = [
+            "Povești nemuritoare",
+            "Călătoria lui Gulliver",
+            "Micul Prinț",
+            "Aventurile lui Tom Sawyer",
+            "Amintiri din copilărie"
+        ];
 
+        // Încărcați cărțile rămase și extrase din localStorage
+        function loadBooks() {
+            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
+            const remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
+
+            // Reconstruirea listei de cărți rămase (excluzând cărțile deja extrase)
+            const bookList = document.getElementById('bookList');
+            bookList.innerHTML = '';
+
+            remainingBooks.forEach(title => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('book');
+                listItem.innerText = title;
+                bookList.appendChild(listItem);
+            });
+
+            // Încărcarea cărților extrase
+            const extractedList = document.getElementById('extractedList');
+            extractedList.innerHTML = '';
             extractedBooks.forEach(item => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('extractedBook');
@@ -124,33 +139,36 @@
 
         // Event listener pentru butonul de extragere
         document.getElementById("drawButton").addEventListener("click", function() {
-            let books = document.querySelectorAll(".book");
-            if (books.length === 0) {
+            let remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
+            
+            if (remainingBooks.length === 0) {
                 document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
                 return;
             }
-            let randomIndex = Math.floor(Math.random() * books.length);
-            let selectedBook = books[randomIndex];
+            
+            let randomIndex = Math.floor(Math.random() * remainingBooks.length);
+            let selectedBook = remainingBooks[randomIndex];
 
             // Afișează cartea extrasă
-            document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook.innerText;
+            document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
 
             // Salvează cartea extrasă în localStorage
             const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
             const currentDate = new Date().toLocaleString();
-            extractedBooks.push({ title: selectedBook.innerText, date: currentDate });
+            extractedBooks.push({ title: selectedBook, date: currentDate });
             localStorage.setItem('extractedBooks', JSON.stringify(extractedBooks));
 
-            // Adaugă cartea extrasă în lista de cărți extrase
-            loadExtractedBooks();
+            // Elimină cartea extrasă din lista de cărți rămase
+            remainingBooks.splice(randomIndex, 1);
+            localStorage.setItem('remainingBooks', JSON.stringify(remainingBooks));
 
-            // Elimină cartea din lista principală
-            selectedBook.remove();
+            // Reîncarcă lista de cărți rămase și extrase
+            loadBooks();
         });
 
-        // Încarcă lista de cărți extrase când pagina este încărcată
+        // Încarcă cărțile atunci când pagina este încărcată
         window.onload = function() {
-            loadExtractedBooks();
+            loadBooks();
         };
     </script>
 </body>
