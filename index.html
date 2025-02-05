@@ -9,59 +9,87 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
-            background-color: #f0f0f0;
-            color: #333;
+            margin: 0;
+            background-image: url('https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
         }
         h2 {
-            color: #d32f2f;
+            color: #ffeb3b;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         #bookList {
             margin: 20px auto;
-            padding: 10px;
+            padding: 20px;
             width: 300px;
-            border: 1px solid #ddd;
-            background-color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         .book {
             padding: 10px;
             cursor: pointer;
-            border-bottom: 1px solid #ddd;
-            transition: background-color 0.3s ease;
+            border-bottom: 1px solid #444;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #fff;
         }
         .book:last-child {
             border-bottom: none;
         }
         .book:hover {
-            background-color: #f8d7da;
+            background-color: rgba(255, 235, 59, 0.2);
+            transform: scale(1.05);
         }
         #drawButton {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
             cursor: pointer;
             background-color: #d32f2f;
             color: #fff;
             border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+            border-radius: 25px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         #drawButton:hover {
             background-color: #b71c1c;
+            transform: scale(1.1);
         }
         #selectedBook {
             margin-top: 20px;
-            font-size: 18px;
-            color: #d32f2f;
+            font-size: 1.5rem;
+            color: #ffeb3b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         .michelin-logo {
-            width: 100px;
+            width: 150px;
             margin-bottom: 20px;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
         }
         .footer {
             margin-top: 40px;
             font-size: 14px;
-            color: #777;
+            color: #ccc;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .road-icon {
+            width: 50px;
+            margin: 10px;
+            opacity: 0.8;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
     </style>
 </head>
@@ -77,10 +105,15 @@
         <li class="book">Aventurile lui Tom Sawyer</li>
         <li class="book">Amintiri din copilărie</li>
     </ul>
-    
+
     <div class="footer">
         &copy; 2023 Michelin. Toate drepturile rezervate.
     </div>
+
+    <!-- Elemente decorative -->
+    <img src="https://www.flaticon.com/svg/static/icons/svg/3094/3094877.svg" alt="Road Icon" class="road-icon">
+    <img src="https://www.flaticon.com/svg/static/icons/svg/3094/3094877.svg" alt="Road Icon" class="road-icon" style="animation-delay: 1s;">
+    <img src="https://www.flaticon.com/svg/static/icons/svg/3094/3094877.svg" alt="Road Icon" class="road-icon" style="animation-delay: 2s;">
 
     <script>
         document.getElementById("drawButton").addEventListener("click", function() {
