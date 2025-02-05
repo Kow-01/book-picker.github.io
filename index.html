@@ -1,74 +1,96 @@
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const bookList = document.getElementById("bookList");
-        const selectedBookDisplay = document.getElementById("selectedBook");
-        const drawButton = document.getElementById("drawButton");
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrage o Carte - Michelin</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        #bookList { margin: 20px auto; padding: 10px; width: 300px; border: 1px solid #ddd; }
+        .book { padding: 5px; cursor: pointer; }
+        .book:hover { background-color: #f0f0f0; }
+        #drawButton { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Trage la sorți o carte pentru donație</h2>
+    <button id="drawButton">Extrage o carte</button>
+    <p id="selectedBook"></p>
+    <ul id="bookList"></ul>
 
-        // Lista originală de cărți
-        const initialBooks = [
-            "Povești nemuritoare",
-            "Călătoria lui Gulliver",
-            "Micul Prinț",
-            "Aventurile lui Tom Sawyer",
-            "Amintiri din copilărie"
-        ];
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const bookList = document.getElementById("bookList");
+            const selectedBookDisplay = document.getElementById("selectedBook");
+            const drawButton = document.getElementById("drawButton");
 
-        // Funcție pentru a obține lista salvată sau cea inițială
-        function getSavedBooks() {
-            let savedBooks = localStorage.getItem("books");
-            try {
-                return savedBooks ? JSON.parse(savedBooks) : [...initialBooks];
-            } catch (error) {
-                console.error("Eroare la citirea Local Storage:", error);
-                localStorage.removeItem("books"); // Resetăm dacă JSON-ul e corupt
-                return [...initialBooks];
+            // Lista originală de cărți
+            const initialBooks = [
+                "Povești nemuritoare",
+                "Călătoria lui Gulliver",
+                "Micul Prinț",
+                "Aventurile lui Tom Sawyer",
+                "Amintiri din copilărie"
+            ];
+
+            // Funcție pentru a obține lista salvată sau cea inițială
+            function getSavedBooks() {
+                let savedBooks = localStorage.getItem("books");
+                try {
+                    return savedBooks ? JSON.parse(savedBooks) : [...initialBooks];
+                } catch (error) {
+                    console.error("Eroare la citirea Local Storage:", error);
+                    localStorage.removeItem("books"); // Resetăm dacă JSON-ul e corupt
+                    return [...initialBooks];
+                }
             }
-        }
 
-        // Funcție pentru a salva lista în Local Storage
-        function saveBooks(books) {
-            localStorage.setItem("books", JSON.stringify(books));
-        }
-
-        // Funcție pentru a afișa cărțile în HTML
-        function loadBooks() {
-            let books = getSavedBooks();
-            bookList.innerHTML = ""; // Curățăm lista HTML
-
-            if (books.length === 0) {
-                bookList.innerHTML = "<li style='color: red;'>Toate cărțile au fost extrase!</li>";
-                return;
+            // Funcție pentru a salva lista în Local Storage
+            function saveBooks(books) {
+                localStorage.setItem("books", JSON.stringify(books));
             }
 
-            books.forEach(book => {
-                let li = document.createElement("li");
-                li.classList.add("book");
-                li.textContent = book;
-                bookList.appendChild(li);
+            // Funcție pentru a afișa cărțile în HTML
+            function loadBooks() {
+                let books = getSavedBooks();
+                bookList.innerHTML = ""; // Curățăm lista HTML
+
+                if (books.length === 0) {
+                    bookList.innerHTML = "<li style='color: red;'>Toate cărțile au fost extrase!</li>";
+                    return;
+                }
+
+                books.forEach(book => {
+                    let li = document.createElement("li");
+                    li.classList.add("book");
+                    li.textContent = book;
+                    bookList.appendChild(li);
+                });
+            }
+
+            // Funcție pentru extragerea unei cărți
+            drawButton.addEventListener("click", function() {
+                let books = getSavedBooks();
+                if (books.length === 0) {
+                    selectedBookDisplay.innerText = "Toate cărțile au fost extrase!";
+                    return;
+                }
+
+                let randomIndex = Math.floor(Math.random() * books.length);
+                let selectedBook = books[randomIndex];
+
+                // Afișează cartea extrasă
+                selectedBookDisplay.innerText = "Ai extras: " + selectedBook;
+
+                // Elimină cartea extrasă din listă și salvează noua listă
+                books.splice(randomIndex, 1);
+                saveBooks(books);
+                loadBooks(); // Actualizează vizual lista
             });
-        }
 
-        // Funcție pentru extragerea unei cărți
-        drawButton.addEventListener("click", function() {
-            let books = getSavedBooks();
-            if (books.length === 0) {
-                selectedBookDisplay.innerText = "Toate cărțile au fost extrase!";
-                return;
-            }
-
-            let randomIndex = Math.floor(Math.random() * books.length);
-            let selectedBook = books[randomIndex];
-
-            // Afișează cartea extrasă
-            selectedBookDisplay.innerText = "Ai extras: " + selectedBook;
-
-            // Elimină cartea extrasă din listă și salvează noua listă
-            books.splice(randomIndex, 1);
-            saveBooks(books);
-            loadBooks(); // Actualizează vizual lista
+            // Inițializează lista la deschiderea paginii
+            loadBooks();
         });
-
-        // Inițializează lista la deschiderea paginii
-        loadBooks();
-    });
-</script>
+    </script>
+</body>
+</html>
