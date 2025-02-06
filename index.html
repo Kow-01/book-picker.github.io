@@ -172,73 +172,72 @@
 
         // Încărcați cărțile rămase și extrase din localStorage
         function loadBooks() {
-            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
-            const remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
+    const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
+    let remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
 
-            // Reconstruirea listei de cărți rămase (excluzând cărțile deja extrase)
-            const bookList = document.getElementById('bookList');
-            bookList.innerHTML = '';
+    // Reconstruirea listei de cărți rămase
+    const bookList = document.getElementById('bookList');
+    bookList.innerHTML = ''; // Golește lista înainte de populare
 
-            remainingBooks.forEach(title => {
-                const listItem = document.createElement('li');
-                listItem.classList.add('book');
-                listItem.innerText = title;
-                bookList.appendChild(listItem);
-            });
+    remainingBooks.forEach(title => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('book');
+        listItem.innerText = title;
+        bookList.appendChild(listItem);
+    });
 
-            // Încărcarea cărților extrase
-            const extractedList = document.getElementById('extractedList');
-            extractedList.innerHTML = '';
-            extractedBooks.forEach(item => {
-                const listItem = document.createElement('li');
-                listItem.classList.add('extractedBook');
-                listItem.innerText = `${item.title} - Extras pe ${item.date}`;
-                extractedList.appendChild(listItem);
-            });
-        }
+    // Încărcarea cărților extrase
+    const extractedList = document.getElementById('extractedList');
+    extractedList.innerHTML = '';
+    extractedBooks.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('extractedBook');
+        listItem.innerText = `${item.title} - Extras pe ${item.date}`;
+        extractedList.appendChild(listItem);
+    });
+}
 
-        // Event listener pentru butonul de extragere
-        document.getElementById("drawButton").addEventListener("click", function() {
-            let remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
-            
-            if (remainingBooks.length === 0) {
-                document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
-                return;
-            }
-            
-            let randomIndex = Math.floor(Math.random() * remainingBooks.length);
-            let selectedBook = remainingBooks[randomIndex];
+// Event listener pentru butonul de extragere
+document.getElementById("drawButton").addEventListener("click", function() {
+    let remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
+    
+    if (remainingBooks.length === 0) {
+        document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
+        return;
+    }
+    
+    let randomIndex = Math.floor(Math.random() * remainingBooks.length);
+    let selectedBook = remainingBooks[randomIndex];
 
-            // Afișează cartea extrasă
-            document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
+    // Afișează cartea extrasă
+    document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
 
-            // Salvează cartea extrasă în localStorage
-            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
-            const currentDate = new Date().toLocaleString();
-            extractedBooks.push({ title: selectedBook, date: currentDate });
-            localStorage.setItem('extractedBooks', JSON.stringify(extractedBooks));
+    // Salvează cartea extrasă în localStorage
+    const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
+    const currentDate = new Date().toLocaleString();
+    extractedBooks.push({ title: selectedBook, date: currentDate });
+    localStorage.setItem('extractedBooks', JSON.stringify(extractedBooks));
 
-            // Elimină cartea extrasă din lista de cărți rămase
-            remainingBooks.splice(randomIndex, 1);
-            localStorage.setItem('remainingBooks', JSON.stringify(remainingBooks));
+    // Elimină cartea extrasă din lista de cărți rămase
+    remainingBooks.splice(randomIndex, 1);
+    localStorage.setItem('remainingBooks', JSON.stringify(remainingBooks));
 
-            // Reîncarcă lista de cărți rămase și extrase
-            loadBooks();
-        });
+    // Reîncarcă lista de cărți rămase și extrase
+    loadBooks();
+});
 
-         Event listener pentru butonul de resetare
-        document.getElementById("resetButton").addEventListener("click", function() {
-            Șterge cărțile extrase din localStorage
-            localStorage.removeItem('extractedBooks');
-            localStorage.removeItem('remainingBooks');
-            alert("Lista de cărți extrase a fost resetată!");
-            loadBooks(); // Reîncarcă lista pentru a reflecta resetarea
-        });
+// Event listener pentru butonul de resetare
+document.getElementById("resetButton").addEventListener("click", function() {
+    // Șterge cărțile extrase din localStorage
+    localStorage.removeItem('extractedBooks');
+    localStorage.removeItem('remainingBooks');
 
-        // Încarcă cărțile atunci când pagina este încărcată
-        window.onload = function() {
-            loadBooks();
-        };
-    </script>
-</body>
-</html>
+    // Reîncarcă lista pentru a reflecta resetarea
+    alert("Lista de cărți extrase a fost resetată!");
+    loadBooks();
+});
+
+// Încarcă cărțile atunci când pagina este încărcată
+window.onload = function() {
+    loadBooks();
+};
