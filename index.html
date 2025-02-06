@@ -235,7 +235,7 @@
           try {
               await addDoc(collection(db, "extractedBooks"), {
                   title: selectedBook,
-                  date: new Date().toISOString()  // Salvează data corect în format UTC
+                  new Date().toLocaleString()
               });
 
               // After adding the book, update the displayed lists
