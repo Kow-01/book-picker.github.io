@@ -26,7 +26,7 @@
         #bookList, #extractedBooks {
             margin: 20px auto;
             padding: 20px;
-            width: 300px;
+            width: 400px;
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -36,7 +36,7 @@
         }
         .book, .extractedBook {
             font-family: 'Raleway', sans-serif;
-            font-weight: 400;
+            font-weight: 500;
             padding: 10px;
             cursor: pointer;
             border-bottom: 1px solid #444;
@@ -112,7 +112,7 @@
     <img src="https://michelinmedia.com/site/user/images/170517_Bibendum_Bienvenue_vectorisation_02__2_.png" alt="Michelin Logo" class="logo">
     <h2>Trage la sorți cartea pe care o vei dona</h2>
     <button id="drawButton">Extrage o carte</button>
-    <button id="resetButton">Resetează cărțile extrase</button>
+    <<!--button id="resetButton">Resetează cărțile extrase</button> -->
     <p id="selectedBook"></p>
     <ul id="bookList"></ul>
 
@@ -209,12 +209,12 @@
             loadBooks();
         });
 
-        document.getElementById("resetButton").addEventListener("click", function() {
-            localStorage.removeItem('extractedBooks');
-            localStorage.removeItem('remainingBooks');
-            alert("Lista de cărți extrase a fost resetată!");
-            loadBooks();
-        });
+        //document.getElementById("resetButton").addEventListener("click", function() {
+            //localStorage.removeItem('extractedBooks');
+            //localStorage.removeItem('remainingBooks');
+            //alert("Lista de cărți extrase a fost resetată!");
+            //loadBooks();
+        //});
 
         window.onload = function() {
             loadBooks();
