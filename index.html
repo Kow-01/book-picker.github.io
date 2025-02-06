@@ -120,7 +120,7 @@
     <img src="https://michelinmedia.com/site/user/images/170517_Bibendum_Bienvenue_vectorisation_02__2_.png" alt="Michelin Logo" class="logo">
     <h2>Trage la sorți cartea pe care o vei dona</h2>
     <button id="drawButton">Extrage o carte</button>
-    <!--<button id="resetButton"  >Resetează cărțile extrase</button> -->
+    <!-<button id="resetButton"  >Resetează cărțile extrase</button> -->
     <p id="selectedBook"></p>
     <ul id="bookList"></ul>
 
@@ -226,14 +226,14 @@
             loadBooks();
         });
 
-        // Event listener pentru butonul de resetare
-       // document.getElementById("resetButton").addEventListener("click", function() {
-            // Șterge cărțile extrase din localStorage
-        //    localStorage.removeItem('extractedBooks');
-        //    localStorage.removeItem('remainingBooks');
-        //    alert("Lista de cărți extrase a fost resetată!");
-         //   loadBooks(); // Reîncarcă lista pentru a reflecta resetarea
-        //});
+         Event listener pentru butonul de resetare
+        document.getElementById("resetButton").addEventListener("click", function() {
+            Șterge cărțile extrase din localStorage
+            localStorage.removeItem('extractedBooks');
+            localStorage.removeItem('remainingBooks');
+            alert("Lista de cărți extrase a fost resetată!");
+            loadBooks(); // Reîncarcă lista pentru a reflecta resetarea
+        });
 
         // Încarcă cărțile atunci când pagina este încărcată
         window.onload = function() {
