@@ -19,7 +19,10 @@
             overflow-y: auto;
         }
         h2 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
             color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
         #bookList, #extractedBooks {
             margin: 20px auto;
@@ -31,8 +34,28 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             height: 250px;
             overflow-y: auto;
+            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.5);
         }
-        #drawButton {
+        .book, .extractedBook {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 400;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #444;
+            color: #000;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 16px;
+        }
+        .book:last-child, .extractedBook:last-child {
+            border-bottom: none;
+        }
+        .book:hover, .extractedBook:hover {
+            background-color: rgba(255, 235, 59, 0.2);
+            transform: scale(1.05);
+        }
+        #drawButton, #resetButton {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
             padding: 15px 30px;
             font-size: 18px;
             cursor: pointer;
@@ -41,18 +64,54 @@
             border: none;
             border-radius: 25px;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 10px;
         }
-        #drawButton:hover {
+        #drawButton:hover, #resetButton:hover {
             background-color: #001f5b;
             transform: scale(1.1);
         }
         #selectedBook {
             margin-top: 20px;
             font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .logo {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 150px;
+            height: 250px;
+        }
+        #extractedBooks {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 220px;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            color: #000;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+        #extractedBooks h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #000;
+            font-weight: normal;
+        }
+        #extractedList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
     </style>
 </head>
 <body>
+    <img src="https://michelinmedia.com/site/user/images/170517_Bibendum_Bienvenue_vectorisation_02__2_.png" alt="Michelin Logo" class="logo">
     <h2>Trage la sorți cartea pe care o vei dona</h2>
     <button id="drawButton">Extrage o carte</button>
     <p id="selectedBook"></p>
@@ -84,14 +143,41 @@
           "Minunea - R.J. Palacio",
           "Lămâi, Cărți și Prieteni - Jo Cotterill",
           "Copiii de Făină - Anne Finne",
+          "Dă mai departe - Catherine Ryan Hyde",
           "Matilda - Roald Dahl",
-          "Charlie și Fabrica de Ciocolată - Roald Dahl"
+          "Domnul Fox, Vulpoi Fantastic - Roald Dahl",
+          "Marele Uriaș Prietenos - Roald Dahl",
+          "Charlie și Fabrica de Ciocolată - Roald Dahl",
+          "Băiatul din Ultima Bancă - Ovjali Q. Raif",
+          "Această Splendidă Mare Pestriță - David Biro",
+          "Din 7 în 7 - Holly Goldberg Sloan",
+          "Cititorul din Peșteră - Rui Zink",
+          "Robot sub Acoperire - David Edmonds",
+          "Insula Orfanilor - Laurel Snyder",
+          "Războiul care mi-a salvat viața - Kimberly Brubaker Bradley",
+          "Războiul care m-a învățat să trăiesc - Kimberly Brubaker Bradley",
+          "Vânătorii de Zmeie - Khaled Hosseini",
+          "Splendida Cetate a celor o Mie de Sori - Khaled Hosseini",
+          "Și Munții Au Ecou - Khaled Hosseini",
+          "Oscar și Tanti Roz - Eric Emmanuel Schmitt",
+          "Insula - Victoria Hislop",
+          "Cei ce sunt iubiți - Victoria Hislop",
+          "Jurnalul Annei Frank",
+          "Insula Roboților - Peter Brown",
+          "Bunica mi-a zis să-ți spun că-i pare rău - Fredrik Backman",
+          "Pollyanna, Jocurile Bucuriei - Eleanor N. Porter",
+          "Needucabilii - Gordon Korman",
+          "Pânza lui Charlotte - E.B. White",
+          "Tatăl Celuilalt Copil - Parinoush Saniee",
+          "Poveste de Crăciun - Charles Dickens",
+          "Prinț și Cerșetor - Mark Twain",
+          "Eu sunt Malala",
+          "Băiatul cu Pijamale în Dungi - John Boyne",
+          "La Cinci Pași de Tine - Rachael Lippincott",
+          "Povestea Frindelului - Andrew Clements",
+          "Helga și Păpușile - Wilhelm Otto Ulmann",
+          "Când Moș Crăciun a căzut din Cer - Cornelia Funke"
       ];
-
-      function formatDate(date) {
-          const d = new Date(date);
-          return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
-      }
 
       async function loadBooks() {
           const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
@@ -103,7 +189,10 @@
           bookList.innerHTML = '';
 
           if (remainingBooks.length === 0) {
-              bookList.innerHTML = '<li>Nu mai sunt cărți de extras!</li>';
+              const listItem = document.createElement('li');
+              listItem.classList.add('book');
+              listItem.innerText = 'Nu mai sunt cărți de extras!';
+              bookList.appendChild(listItem);
           } else {
               remainingBooks.forEach(title => {
                   const listItem = document.createElement('li');
@@ -113,7 +202,8 @@
               });
           }
 
-          extractedBooks.sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+          // Sort extracted books by date
+          extractedBooks.sort((a, b) => new Date(b.date) - new Date(a.date));
 
           const extractedList = document.getElementById('extractedList');
           extractedList.innerHTML = '';
@@ -145,9 +235,10 @@
           try {
               await addDoc(collection(db, "extractedBooks"), {
                   title: selectedBook,
-                  date: formatDate(new Date())
+                  date: new Date().toLocaleString()
               });
 
+              // After adding the book, update the displayed lists
               loadBooks();
           } catch (error) {
               console.error("Eroare la salvarea cărții: ", error);
@@ -156,6 +247,8 @@
 
       window.onload = function() {
           loadBooks();
+
+          // Ascultă modificările din colecția extractedBooks
           onSnapshot(collection(db, "extractedBooks"), loadBooks);
       };
     </script>
