@@ -15,8 +15,8 @@
             background-size: cover;
             color: #fff;
             height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            overflow-y: auto; /* Allow vertical scroll */
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         h2 {
             font-family: 'Raleway', sans-serif;
@@ -27,8 +27,8 @@
         #bookList, #extractedBooks {
             margin: 20px auto;
             padding: 20px;
-            width: 90%; /* Make the width responsive */
-            max-width: 400px; /* Max width for larger screens */
+            width: 90%;
+            max-width: 400px;
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -121,54 +121,76 @@
         <h3>Cărți extrase:</h3>
         <ul id="extractedList"></ul>
     </div>
-    
-    <script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDECn2Fx5iyH5GcEBEr8Yb1O_PHj232a84",
+            authDomain: "book-picker-4da5d.firebaseapp.com",
+            projectId: "book-picker-4da5d",
+            storageBucket: "book-picker-4da5d.firebasestorage.app",
+            messagingSenderId: "539245156966",
+            appId: "1:539245156966:web:d1fbdf04884119e5f2aba7",
+            measurementId: "G-BGPY1RTX04"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        // Initialize Firestore
+        const db = getFirestore(app);
+
         const initialBooks = [
-    "Minunea - R.J. Palacio",
-    "Lămâi, Cărți și Prieteni - Jo Cotterill",
-    "Copiii de Făină - Anne Finne",
-    "Dă mai departe - Catherine Ryan Hyde",
-    "Matilda - Roald Dahl",
-    "Domnul Fox, Vulpoi Fantastic - Roald Dahl",
-    "Marele Uriaș Prietenos - Roald Dahl",
-    "Charlie și Fabrica de Ciocolată - Roald Dahl",
-    "Băiatul din Ultima Bancă - Ovjali Q. Raif",
-    "Această Splendidă Mare Pestriță - David Biro",
-    "Din 7 în 7 - Holly Goldberg Sloan",
-    "Cititorul din Peșteră - Rui Zink",
-    "Robot sub Acoperire - David Edmonds",
-    "Insula Orfanilor - Laurel Snyder",
-    "Războiul care mi-a salvat viața - Kimberly Brubaker Bradley",
-    "Războiul care m-a învățat să trăiesc - Kimberly Brubaker Bradley",
-    "Vânătorii de Zmeie - Khaled Hosseini",
-    "Splendida Cetate a celor o Mie de Sori - Khaled Hosseini",
-    "Și Munții Au Ecou - Khaled Hosseini",
-    "Oscar și Tanti Roz - Eric Emmanuel Schmitt",
-    "Insula - Victoria Hislop",
-    "Cei ce sunt iubiți - Victoria Hislop",
-    "Jurnalul Annei Frank",
-    "Insula Roboților - Peter Brown",
-    "Bunica mi-a zis să-ți spun că-i pare rău - Fredrik Backman",
-    "Pollyanna, Jocurile Bucuriei - Eleanor N. Porter",
-    "Needucabilii - Gordon Korman",
-    "Pânza lui Charlotte - E.B. White",
-    "Tatăl Celuilalt Copil - Parinoush Saniee",
-    "Poveste de Crăciun - Charles Dickens",
-    "Prinț și Cerșetor - Mark Twain",
-    "Eu sunt Malala",
-    "Băiatul cu Pijamale în Dungi - John Boyne",
-    "La Cinci Pași de Tine - Rachael Lippincott",
-    "Povestea Frindelului - Andrew Clements",
-    "Helga și Păpușile - Wilhelm Otto Ulmann",
-    "Când Moș Crăciun a căzut din Cer - Cornelia Funke"
+            "Minunea - R.J. Palacio",
+            "Lămâi, Cărți și Prieteni - Jo Cotterill",
+            "Copiii de Făină - Anne Finne",
+            "Dă mai departe - Catherine Ryan Hyde",
+            "Matilda - Roald Dahl",
+            "Domnul Fox, Vulpoi Fantastic - Roald Dahl",
+            "Marele Uriaș Prietenos - Roald Dahl",
+            "Charlie și Fabrica de Ciocolată - Roald Dahl",
+            "Băiatul din Ultima Bancă - Ovjali Q. Raif",
+            "Această Splendidă Mare Pestriță - David Biro",
+            "Din 7 în 7 - Holly Goldberg Sloan",
+            "Cititorul din Peșteră - Rui Zink",
+            "Robot sub Acoperire - David Edmonds",
+            "Insula Orfanilor - Laurel Snyder",
+            "Războiul care mi-a salvat viața - Kimberly Brubaker Bradley",
+            "Războiul care m-a învățat să trăiesc - Kimberly Brubaker Bradley",
+            "Vânătorii de Zmeie - Khaled Hosseini",
+            "Splendida Cetate a celor o Mie de Sori - Khaled Hosseini",
+            "Și Munții Au Ecou - Khaled Hosseini",
+            "Oscar și Tanti Roz - Eric Emmanuel Schmitt",
+            "Insula - Victoria Hislop",
+            "Cei ce sunt iubiți - Victoria Hislop",
+            "Jurnalul Annei Frank",
+            "Insula Roboților - Peter Brown",
+            "Bunica mi-a zis să-ți spun că-i pare rău - Fredrik Backman",
+            "Pollyanna, Jocurile Bucuriei - Eleanor N. Porter",
+            "Needucabilii - Gordon Korman",
+            "Pânza lui Charlotte - E.B. White",
+            "Tatăl Celuilalt Copil - Parinoush Saniee",
+            "Poveste de Crăciun - Charles Dickens",
+            "Prinț și Cerșetor - Mark Twain",
+            "Eu sunt Malala",
+            "Băiatul cu Pijamale în Dungi - John Boyne",
+            "La Cinci Pași de Tine - Rachael Lippincott",
+            "Povestea Frindelului - Andrew Clements",
+            "Helga și Păpușile - Wilhelm Otto Ulmann",
+            "Când Moș Crăciun a căzut din Cer - Cornelia Funke"
         ];
 
-        function loadBooks() {
-            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
-            let remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
+        async function loadBooks() {
+            const extractedBooks = await getDocs(collection(db, "extractedBooks"));
+            const remainingBooks = [...initialBooks];
 
             const bookList = document.getElementById('bookList');
-            bookList.innerHTML = ''; 
+            bookList.innerHTML = '';
 
             remainingBooks.forEach(title => {
                 const listItem = document.createElement('li');
@@ -187,26 +209,33 @@
             });
         }
 
-        document.getElementById("drawButton").addEventListener("click", function() {
-            let remainingBooks = JSON.parse(localStorage.getItem('remainingBooks')) || [...initialBooks];
-            
+        async function saveExtractedBook(title) {
+            try {
+                const docRef = await addDoc(collection(db, "extractedBooks"), {
+                    title: title,
+                    date: new Date().toLocaleString()
+                });
+                console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
+
+        document.getElementById("drawButton").addEventListener("click", async function() {
+            const remainingBooks = [...initialBooks]; // Using static list, change this to sync with Firestore if needed
             if (remainingBooks.length === 0) {
                 document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
                 return;
             }
-            
-            let randomIndex = Math.floor(Math.random() * remainingBooks.length);
-            let selectedBook = remainingBooks[randomIndex];
+            const randomIndex = Math.floor(Math.random() * remainingBooks.length);
+            const selectedBook = remainingBooks[randomIndex];
 
             document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
 
-            const extractedBooks = JSON.parse(localStorage.getItem('extractedBooks')) || [];
-            extractedBooks.push({ title: selectedBook, date: new Date().toLocaleString() });
-            localStorage.setItem('extractedBooks', JSON.stringify(extractedBooks));
+            // Save extracted book to Firestore
+            saveExtractedBook(selectedBook);
 
-            remainingBooks.splice(randomIndex, 1);
-            localStorage.setItem('remainingBooks', JSON.stringify(remainingBooks));
-
+            // Re-render books after saving
             loadBooks();
         });
 
