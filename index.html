@@ -124,7 +124,7 @@
     
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-      import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+      import { getFirestore, collection, getDocs, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
       const firebaseConfig = {
           apiKey: "AIzaSyDECn2Fx5iyH5GcEBEr8Yb1O_PHj232a84",
@@ -245,6 +245,8 @@
 
       window.onload = function() {
           loadBooks();
+          // Ascultă schimbările din colecția extractedBooks
+          onSnapshot(collection(db, "extractedBooks"), loadBooks);
       };
     </script>
 </body>
