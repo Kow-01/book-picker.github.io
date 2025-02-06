@@ -6,7 +6,6 @@
     <title>Extrage o Carte - Michelin</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Stiluri CSS pentru design */
         body {
             font-family: 'Raleway', sans-serif;
             text-align: center;
@@ -16,8 +15,8 @@
             background-size: cover;
             color: #fff;
             height: 100vh;
-            overflow-x: hidden; /* Previne scroll orizontal */
-            overflow-y: auto; /* Permite scroll vertical */
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         h2 {
             font-family: 'Raleway', sans-serif;
@@ -28,8 +27,8 @@
         #bookList, #extractedBooks {
             margin: 20px auto;
             padding: 20px;
-            width: 90%; /* Lățimea adaptivă */
-            max-width: 400px; /* Lățimea maximă pentru ecrane mari */
+            width: 90%;
+            max-width: 400px;
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -123,13 +122,10 @@
         <ul id="extractedList"></ul>
     </div>
     
-    <!-- Adăugăm scriptul Firebase -->
     <script type="module">
-      // Importați funcțiile necesare din SDK-uri
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
       import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-      // Configurarea Firebase
       const firebaseConfig = {
           apiKey: "AIzaSyDECn2Fx5iyH5GcEBEr8Yb1O_PHj232a84",
           authDomain: "book-picker-4da5d.firebaseapp.com",
@@ -140,11 +136,9 @@
           measurementId: "G-BGPY1RTX04"
       };
 
-      // Inițializați Firebase
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      // Lista inițială de cărți
       const initialBooks = [
           "Minunea - R.J. Palacio",
           "Lămâi, Cărți și Prieteni - Jo Cotterill",
@@ -185,16 +179,12 @@
           "Când Moș Crăciun a căzut din Cer - Cornelia Funke"
       ];
 
-      // Funcție pentru încărcarea cărților din Firestore
       async function loadBooks() {
-          // Obținem cărțile extrase din Firestore
           const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
           const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
 
-          // Lista cărților rămase
           const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
 
-          // Actualizăm lista de cărți disponibile pentru extragere
           const bookList = document.getElementById('bookList');
           bookList.innerHTML = '';
 
@@ -212,10 +202,8 @@
               });
           }
 
-          // Sortăm cărțile extrase după data lor, în ordine inversă
           extractedBooks.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-          // Actualizăm lista de cărți extrase
           const extractedList = document.getElementById('extractedList');
           extractedList.innerHTML = '';
 
@@ -227,9 +215,7 @@
           });
       }
 
-      // Evenimentul pentru butonul de extragere
       document.getElementById("drawButton").addEventListener("click", async function() {
-          // Obținem cărțile rămase
           const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
           const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
 
@@ -240,23 +226,23 @@
               return;
           }
 
-          // Extragem o carte aleatorie
           let randomIndex = Math.floor(Math.random() * remainingBooks.length);
           let selectedBook = remainingBooks[randomIndex];
 
-          // Afișăm cartea extrasă
           document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
 
-          // Salvăm cartea extrasă în Firestore
-          await addDoc(collection(db, "extractedBooks"), {
-              title: selectedBook,
-              date: new Date().toLocaleString()
-          });
+          try {
+              await addDoc(collection(db, "extractedBooks"), {
+                  title: selectedBook,
+                  date: new Date().toLocaleString()
+              });
 
-          loadBooks();
+              loadBooks();
+          } catch (error) {
+              console.error("Eroare la salvarea cărții: ", error);
+          }
       });
 
-      // Încărcăm datele la început
       window.onload = function() {
           loadBooks();
       };
