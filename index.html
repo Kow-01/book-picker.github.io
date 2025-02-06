@@ -209,39 +209,43 @@
             });
         }
 
-        async function saveExtractedBook(title) {
-            try {
-                const docRef = await addDoc(collection(db, "extractedBooks"), {
-                    title: title,
-                    date: new Date().toLocaleString()
-                });
-                console.log("Document written with ID: ", docRef.id);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
+async function loadBooks() {
+    // Obținem cărțile extrase din Firestore
+    const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
+    const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
 
-        document.getElementById("drawButton").addEventListener("click", async function() {
-            const remainingBooks = [...initialBooks]; // Using static list, change this to sync with Firestore if needed
-            if (remainingBooks.length === 0) {
-                document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
-                return;
-            }
-            const randomIndex = Math.floor(Math.random() * remainingBooks.length);
-            const selectedBook = remainingBooks[randomIndex];
+    // Lista inițială de cărți care nu au fost extrase
+    const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
 
-            document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
+    // Actualizăm lista de cărți disponibile pentru extragere
+    const bookList = document.getElementById('bookList');
+    bookList.innerHTML = '';
 
-            // Save extracted book to Firestore
-            saveExtractedBook(selectedBook);
-
-            // Re-render books after saving
-            loadBooks();
+    // Dacă nu mai sunt cărți disponibile
+    if (remainingBooks.length === 0) {
+        const listItem = document.createElement('li');
+        listItem.classList.add('book');
+        listItem.innerText = 'Nu mai sunt cărți de extras!';
+        bookList.appendChild(listItem);
+    } else {
+        // Adăugăm cărțile disponibile
+        remainingBooks.forEach(title => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('book');
+            listItem.innerText = title;
+            bookList.appendChild(listItem);
         });
+    }
 
-        window.onload = function() {
-            loadBooks();
-        };
-    </script>
-</body>
-</html>
+    // Actualizăm lista de cărți extrase
+    const extractedList = document.getElementById('extractedList');
+    extractedList.innerHTML = '';
+
+    // Adăugăm cărțile deja extrase
+    extractedBooks.forEach(book => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('extractedBook');
+        listItem.innerText = `${book.title} - Extras pe ${book.date}`;
+        extractedList.appendChild(listItem);
+    });
+}
