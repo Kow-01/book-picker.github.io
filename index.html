@@ -19,43 +19,10 @@
             overflow-y: auto;
         }
         h2 {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 700;
             color: #fce500;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
-        #bookList, #extractedBooks {
-            margin: 10px auto;
-            padding: 20px;
-            width: 90%;
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            height: 250px;
-            overflow-y: auto;
-            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.5);
-        }
-        .book, .extractedBook {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 400;
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #444;
-            color: #000;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            font-size: 16px;
-        }
-        .book:last-child, .extractedBook:last-child {
-            border-bottom: none;
-        }
-        .book:hover, .extractedBook:hover {
-            background-color: rgba(255, 235, 59, 0.2);
-            transform: scale(1.05);
-        }
-        #drawButton, #resetButton {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 700;
+        #drawButton {
             padding: 15px 30px;
             font-size: 18px;
             cursor: pointer;
@@ -66,18 +33,9 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
             margin: 10px;
         }
-        #drawButton:hover, #resetButton:hover {
+        #drawButton:hover {
             background-color: #001f5b;
             transform: scale(1.1);
-        }
-        #selectedBook {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            color: #fce500;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            background-color: rgba(38, 80, 155, 0.7);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         .logo {
             position: fixed;
@@ -86,174 +44,31 @@
             width: 150px;
             height: 200px;
         }
-        #extractedBooks {
-            position: fixed;
-            bottom: 5px;
-            left: 10px;
-            width: 220px;
-            height: 150px;
-            padding: 10px;
-            font-size: 16px;
-            color: #000;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            overflow-y: auto;
-        }
-        #extractedBooks h3 {
-            font-size: 18px;
-            margin-bottom: 5px;
-            color: #000;
-            font-weight: normal;
-        }
-        #extractedList {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
     </style>
 </head>
 <body>
-    <img src="https://i.postimg.cc/BnpN7yPn/191211-Yeux-Leves-01.png" alt="Michelin Logo" class="logo">
+    <img id="logo" src="https://i.postimg.cc/BnpN7yPn/191211-Yeux-Leves-01.png" alt="Michelin Logo" class="logo">
     <h2>Trage la sorți cartea pe care o vei dona</h2>
     <button id="drawButton">Extrage o carte</button>
     <p id="selectedBook"></p>
-    <ul id="bookList"></ul>
-
-    <div id="extractedBooks">
-        <h3>Cărți extrase:</h3>
-        <ul id="extractedList"></ul>
-    </div>
     
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-      import { getFirestore, collection, getDocs, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
-
-      const firebaseConfig = {
-          apiKey: "AIzaSyDECn2Fx5iyH5GcEBEr8Yb1O_PHj232a84",
-          authDomain: "book-picker-4da5d.firebaseapp.com",
-          projectId: "book-picker-4da5d",
-          storageBucket: "book-picker-4da5d.firebasestorage.app",
-          messagingSenderId: "539245156966",
-          appId: "1:539245156966:web:d1fbdf04884119e5f2aba7",
-          measurementId: "G-BGPY1RTX04"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-
-      const initialBooks = [
-          "Minunea - R.J. Palacio",
-          "Lămâi, Cărți și Prieteni - Jo Cotterill",
-          "Copiii de Făină - Anne Finne",
-          "Dă mai departe - Catherine Ryan Hyde",
-          "Matilda - Roald Dahl",
-          "Domnul Fox, Vulpoi Fantastic - Roald Dahl",
-          "Marele Uriaș Prietenos - Roald Dahl",
-          "Charlie și Fabrica de Ciocolată - Roald Dahl",
-          "Băiatul din Ultima Bancă - Ovjali Q. Raif",
-          "Această Splendidă Mare Pestriță - David Biro",
-          "Din 7 în 7 - Holly Goldberg Sloan",
-          "Cititorul din Peșteră - Rui Zink",
-          "Robot sub Acoperire - David Edmonds",
-          "Insula Orfanilor - Laurel Snyder",
-          "Războiul care mi-a salvat viața - Kimberly Brubaker Bradley",
-          "Războiul care m-a învățat să trăiesc - Kimberly Brubaker Bradley",
-          "Vânătorii de Zmeie - Khaled Hosseini",
-          "Splendida Cetate a celor o Mie de Sori - Khaled Hosseini",
-          "Și Munții Au Ecou - Khaled Hosseini",
-          "Oscar și Tanti Roz - Eric Emmanuel Schmitt",
-          "Insula - Victoria Hislop",
-          "Cei ce sunt iubiți - Victoria Hislop",
-          "Jurnalul Annei Frank",
-          "Insula Roboților - Peter Brown",
-          "Bunica mi-a zis să-ți spun că-i pare rău - Fredrik Backman",
-          "Pollyanna, Jocurile Bucuriei - Eleanor N. Porter",
-          "Needucabilii - Gordon Korman",
-          "Pânza lui Charlotte - E.B. White",
-          "Tatăl Celuilalt Copil - Parinoush Saniee",
-          "Poveste de Crăciun - Charles Dickens",
-          "Prinț și Cerșetor - Mark Twain",
-          "Eu sunt Malala",
-          "Băiatul cu Pijamale în Dungi - John Boyne",
-          "La Cinci Pași de Tine - Rachael Lippincott",
-          "Povestea Frindelului - Andrew Clements",
-          "Helga și Păpușile - Wilhelm Otto Ulmann",
-          "Când Moș Crăciun a căzut din Cer - Cornelia Funke"
-      ];
-
-      async function loadBooks() {
-          const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
-          const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
-
-          const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
-
-          const bookList = document.getElementById('bookList');
-          bookList.innerHTML = '';
-
-          if (remainingBooks.length === 0) {
-              const listItem = document.createElement('li');
-              listItem.classList.add('book');
-              listItem.innerText = 'Nu mai sunt cărți de extras!';
-              bookList.appendChild(listItem);
-          } else {
-              remainingBooks.forEach(title => {
-                  const listItem = document.createElement('li');
-                  listItem.classList.add('book');
-                  listItem.innerText = title;
-                  bookList.appendChild(listItem);
-              });
-          }
-
-          // Sort extracted books by date
-          extractedBooks.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-          const extractedList = document.getElementById('extractedList');
-          extractedList.innerHTML = '';
-
-          extractedBooks.forEach(book => {
-              const listItem = document.createElement('li');
-              listItem.classList.add('extractedBook');
-              listItem.innerText = `${book.title} - Extras pe ${book.date}`;
-              extractedList.appendChild(listItem);
-          });
-      }
-
-      document.getElementById("drawButton").addEventListener("click", async function() {
-          const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
-          const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
-
-          const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
-
-          if (remainingBooks.length === 0) {
-              document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
-              return;
-          }
-
-          let randomIndex = Math.floor(Math.random() * remainingBooks.length);
-          let selectedBook = remainingBooks[randomIndex];
-
-          document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
-
-          try {
-              await addDoc(collection(db, "extractedBooks"), {
-                  title: selectedBook,
-                  date: new Date().toLocaleString('ro-RO', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
-              });
-
-              // After adding the book, update the displayed lists
-              loadBooks();
-          } catch (error) {
-              console.error("Eroare la salvarea cărții: ", error);
-          }
-      });
-
-      window.onload = function() {
-          loadBooks();
-
-          // Ascultă modificările din colecția extractedBooks
-          onSnapshot(collection(db, "extractedBooks"), loadBooks);
-      };
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const logo = document.getElementById("logo");
+            const drawButton = document.getElementById("drawButton");
+            const selectedBook = document.getElementById("selectedBook");
+            
+            // Verificăm dacă utilizatorul a extras deja o carte
+            if (localStorage.getItem("logoChanged") === "true") {
+                logo.src = "https://i.postimg.cc/Wb8x9xn5/190916-Bibendum-zero-01.png";
+            }
+            
+            drawButton.addEventListener("click", function() {
+                // Schimbăm logo-ul
+                logo.src = "https://i.postimg.cc/Wb8x9xn5/190916-Bibendum-zero-01.png";
+                localStorage.setItem("logoChanged", "true");
+            });
+        });
     </script>
 </body>
 </html>
