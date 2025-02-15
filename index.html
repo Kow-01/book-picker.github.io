@@ -125,22 +125,22 @@
         <ul id="extractedList"></ul>
     </div>
     
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-      import { getFirestore, collection, getDocs, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc, onSnapshot, Timestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-      const firebaseConfig = {
-          apiKey: "AIzaSyDECn2Fx5iyH5GcEBEr8Yb1O_PHj232a84",
-          authDomain: "book-picker-4da5d.firebaseapp.com",
-          projectId: "book-picker-4da5d",
-          storageBucket: "book-picker-4da5d.firebasestorage.app",
-          messagingSenderId: "539245156966",
-          appId: "1:539245156966:web:d1fbdf04884119e5f2aba7",
-          measurementId: "G-BGPY1RTX04"
-      };
+  const firebaseConfig = {
+      apiKey: "AIzaSyDECn2Fx5iyH5Gc5iyH5Gc",
+      authDomain: "book-picker-4da5d.firebaseapp.com",
+      projectId: "book-picker-4da5d",
+      storageBucket: "book-picker-4da5d.firebasestorage.app",
+      messagingSenderId: "539245156966",
+      appId: "1:539245156966:web:d1fbdf04884119e5f2aba7",
+      measurementId: "G-BGPY1RTX04"
+  };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
  const initialBooks = [
           "Minunea - R.J. Palacio",
@@ -198,85 +198,69 @@
           "Când Moș Crăciun a căzut din Cer - Cornelia Funke"
       ];
 
-      async function loadBooks() {
-          import { query, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+  async function loadBooks() {
+      const extractedBooksQuery = query(collection(db, "extractedBooks"), orderBy("date", "desc"));
+      const extractedBooksSnapshot = await getDocs(extractedBooksQuery);
+      const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
 
-          const extractedBooksQuery = query(collection(db, "extractedBooks"), orderBy("date", "desc"));
-          const extractedBooksSnapshot = await getDocs(extractedBooksQuery);
+      const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
 
-          const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
+      const bookList = document.getElementById('bookList');
+      bookList.innerHTML = '';
 
-          const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
-
-          const bookList = document.getElementById('bookList');
-          bookList.innerHTML = '';
-
-          if (remainingBooks.length === 0) {
+      if (remainingBooks.length === 0) {
+          bookList.innerHTML = "<li class='book'>Nu mai sunt cărți de extras!</li>";
+      } else {
+          remainingBooks.forEach(title => {
               const listItem = document.createElement('li');
               listItem.classList.add('book');
-              listItem.innerText = 'Nu mai sunt cărți de extras!';
+              listItem.innerText = title;
               bookList.appendChild(listItem);
-          } else {
-              remainingBooks.forEach(title => {
-                  const listItem = document.createElement('li');
-                  listItem.classList.add('book');
-                  listItem.innerText = title;
-                  bookList.appendChild(listItem);
-              });
-          }
-
-          // Sort extracted books by date
-          extractedBooks.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-          const extractedList = document.getElementById('extractedList');
-          extractedList.innerHTML = '';
-
-          extractedBooks.forEach(book => {
-              const listItem = document.createElement('li');
-              listItem.classList.add('extractedBook');
-              listItem.innerText = `${book.title} - Extras pe ${book.date}`;
-              extractedList.appendChild(listItem);
           });
       }
 
-      document.getElementById("drawButton").addEventListener("click", async function() {
-          const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
-          const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
+      const extractedList = document.getElementById('extractedList');
+      extractedList.innerHTML = '';
 
-          const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
-
-          if (remainingBooks.length === 0) {
-              document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
-              return;
-          }
-
-          let randomIndex = Math.floor(Math.random() * remainingBooks.length);
-          let selectedBook = remainingBooks[randomIndex];
-
-          document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
-
-          try {
-     import { Timestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
-
-await addDoc(collection(db, "extractedBooks"), {
-    title: selectedBook,
-    date: Timestamp.now()  // Stocare nativă Firestore
-});
-
-
-              // After adding the book, update the displayed lists
-              loadBooks();
-          } catch (error) {
-              console.error("Eroare la salvarea cărții: ", error);
-          }
+      extractedBooks.forEach(book => {
+          const listItem = document.createElement('li');
+          listItem.classList.add('extractedBook');
+          listItem.innerText = `${book.title} - Extras pe ${book.date}`;
+          extractedList.appendChild(listItem);
       });
+  }
 
-      window.onload = function() {
+  document.getElementById("drawButton").addEventListener("click", async function() {
+      const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
+      const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
+
+      const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
+
+      if (remainingBooks.length === 0) {
+          document.getElementById("selectedBook").innerText = "Toate cărțile au fost extrase!";
+          return;
+      }
+
+      let randomIndex = Math.floor(Math.random() * remainingBooks.length);
+      let selectedBook = remainingBooks[randomIndex];
+
+      document.getElementById("selectedBook").innerText = "Ai extras: " + selectedBook;
+
+      try {
+          await addDoc(collection(db, "extractedBooks"), {
+              title: selectedBook,
+              date: Timestamp.now()
+          });
+
           loadBooks();
+      } catch (error) {
+          console.error("Eroare la salvarea cărții: ", error);
+      }
+  });
 
-          // Ascultă modificările din colecția extractedBooks
-          onSnapshot(collection(db, "extractedBooks"), loadBooks);
-      };
-    </script>
+  document.addEventListener("DOMContentLoaded", loadBooks);
+
+  onSnapshot(collection(db, "extractedBooks"), loadBooks);
+</script>
 </body>
 </html>
