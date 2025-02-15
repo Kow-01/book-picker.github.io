@@ -222,12 +222,17 @@
       const extractedList = document.getElementById('extractedList');
       extractedList.innerHTML = '';
 
-      extractedBooks.forEach(book => {
-          const listItem = document.createElement('li');
-          listItem.classList.add('extractedBook');
-          listItem.innerText = `${book.title} - Extras pe ${book.date}`;
-          extractedList.appendChild(listItem);
-      });
+extractedBooks.forEach(book => {
+    const date = book.date.toDate(); // Converteste Firebase Timestamp în obiect Date
+    const formattedDate = date.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: '2-digit' });
+    const formattedTime = date.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const listItem = document.createElement('li');
+    listItem.classList.add('extractedBook');
+    listItem.innerText = `${book.title} - ${formattedDate}, ${formattedTime}`;
+    extractedList.appendChild(listItem);
+});
+
   }
 
   document.getElementById("drawButton").addEventListener("click", async function() {
