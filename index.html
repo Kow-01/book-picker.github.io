@@ -199,7 +199,11 @@
       ];
 
       async function loadBooks() {
-          const extractedBooksSnapshot = await getDocs(collection(db, "extractedBooks"));
+          import { query, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+          const extractedBooksQuery = query(collection(db, "extractedBooks"), orderBy("date", "desc"));
+          const extractedBooksSnapshot = await getDocs(extractedBooksQuery);
+
           const extractedBooks = extractedBooksSnapshot.docs.map(doc => doc.data());
 
           const remainingBooks = initialBooks.filter(book => !extractedBooks.some(extractedBook => extractedBook.title === book));
