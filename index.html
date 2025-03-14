@@ -6,37 +6,60 @@
     <title>Extrage o Carte - Michelin</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Raleway', sans-serif;
             text-align: center;
-            padding: 20px;
-            margin: 0;
             background: url('https://images.pexels.com/photos/2908984/pexels-photo-2908984.jpeg') no-repeat center center;
             background-size: cover;
-            color: #fff;
+            height: 100vh; /* Ocupă 100% din înălțimea ecranului */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
+
         h2 {
-            font-family: 'Raleway', sans-serif;
             font-weight: 700;
-            color: #ffcc00;
+            color: #ffffff;
+            background-color: #27509b;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    
+            font-size: 24px;
+            max-width: 80%;
         }
-        .logo {
+
+        .logo-corner {
             position: absolute;
             top: 10px;
             left: 10px;
-            width: 100px;
+            width: 150px;
             height: auto;
+        }
+
+        .logo-center {
+            width: 300px;
+            height: auto;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/Michelin_Logo.svg/2560px-Michelin_Logo.svg.png" alt="Michelin Logo" class="logo">
-    <h2> Campania s-a încheiat! Vă mulțumim pentru contribuție!</h2>
-    </script>
-</body>
-</html>
-</script>
+    <!-- Logo în colțul stânga sus -->
+    <img src="https://i.postimg.cc/yNrR6SDS/Michelin-G-H-No-BL-White-BG-RGB-0618.png" alt="Michelin Logo" class="logo-corner">
+    
+    <!-- Mesajul campaniei -->
+    <h2>Campania s-a încheiat! Vă mulțumim pentru contribuție!</h2>
+
+    <!-- Logo centrat -->
+    <img src="https://i.postimg.cc/XqWYnVkC/Bib-Coeur-debout.png" alt="Bib Coeur Logo" class="logo-center">
 </body>
 </html>
